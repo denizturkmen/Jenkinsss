@@ -1,18 +1,29 @@
 pipeline {
     agent any
 
+  
     stages {
+        
+        stage('version'){
+            steps{
+                sh "java --version"
+                sh "mvn --version"
+            }
+        }
+        
         stage('Build') {
             steps {
-                echo "Build Startttt.........."
                 // Get some code from a GitHub repository
                 git 'https://github.com/denizturkmen/Jenkinsss.git'
+
                 // Run Maven on a Unix agent.
-                sh "mvn clean install"
+                sh "mvn package"
+                sh "mvn install"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
-            steps{
-                sh ' mkdir -p /mnt/'
-            }
+
             post {
                 // If Maven was able to run the tests, even if some of the test
                 // failed, record the test results and archive the jar file.
